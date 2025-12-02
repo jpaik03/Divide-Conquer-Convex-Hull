@@ -1,2 +1,4 @@
 *.o
 dnc_ch
+*.svg
+*.txt

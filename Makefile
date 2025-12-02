@@ -9,7 +9,7 @@
 CXX      = clang++
 CXXFLAGS = -g3 -Wall -Wextra -Werror -Wfatal-errors -std=c++17
 
-# DEPENDENCY PATHS (/usr/sup)
+# Dependency paths (/usr/sup)
 CGAL_PATH  = /usr/sup/cgal-5.3.1
 GMP_PATH   = /usr/sup/gmp-6.1.0
 MPFR_PATH  = /usr/sup/mpfr-3.0.0
