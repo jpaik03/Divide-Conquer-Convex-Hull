@@ -28,12 +28,12 @@ typedef Kernel::Point_2 Point;
 /* Function declarations */
 void readInput(string inputFile, vector<Point> &points);
 void sortPoints(vector<Point> &points);
-void saveToSVG(string outputFile, vector<Point> &points);
+void saveToSVG(string outputFile, vector<Point> &points, vector<Point> &hull);
 void printPoints(vector<Point> &points);
 
 /* Define constants */
-const double SVG_W = 800.0;
-const double SVG_H = 600.0;
+const double SVG_W = 1491.0;
+const double SVG_H = 803.0;
 const double SVG_M = 50.0;
 
 
@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
         cout << points.size() << " points read from file.\n";
 
         /* Visualization */
-        saveToSVG("output.svg", points);
+        saveToSVG("output.svg", points, points);
         cout << "Graph saved to output.svg\n";
 
         return 0;
@@ -120,9 +120,78 @@ void sortPoints(vector<Point> &points)
         });
 }
 
-void saveToSVG(string outputFile, vector<Point> &points)
+void saveToSVG(string outputFile, vector<Point> &points, vector<Point> &hull)
 {
+        if (points.empty()) {
+                return;
+        }
+
+        /* Open output file */
+        ofstream svg(outputFile);
+
+        /* Find range of the data */
+        double minX = points[0].x(), maxX = points[0].x();
+        double minY = points[0].y(), maxY = points[0].y();
+
+        Point p;
+        for (unsigned i = 0; i < points.size(); i++) {
+                p = points[i];
+                if (p.x() < minX) {
+                        minX = p.x();
+                }
+                if (p.x() > maxX) {
+                        maxX = p.x();
+                }
+                if (p.y() < minY) {
+                        minY = p.y();      
+                } if (p.y() > maxY) {
+                        maxY = p.y();
+                }
+        }
         
+        /* Prevent zero division edge case */
+        double rangeX = maxX - minX;
+        if (rangeX == 0) {
+                rangeX = 1.0;
+        }
+        double rangeY = maxY - minY;
+        if (rangeY == 0) {
+                rangeY = 1.0;
+        }
+
+        double scaleX = (SVG_W - 2 * SVG_M) / rangeX;
+        double scaleY = (SVG_H - 2 * SVG_M) / rangeY;
+
+        /* SVG header */
+        svg << "<svg xmlns=\"http://www.w3.org/2000/svg\" "
+            << "width=\"" << SVG_W << "\" height=\"" << SVG_H
+            << "\" viewBox=\"0 0 " << SVG_W << " " << SVG_H << "\">\n"
+            << "<rect width=\"100%\" height=\"100%\" fill=\"white\"/>\n";
+
+        /* Draw convex hull */
+        if (!hull.empty()) {
+                svg << "<polygon points=\"";
+                for (unsigned i = 0; i < hull.size(); i++) {
+                        // Apply scale
+                        double sx = SVG_M + (hull[i].x() - minX) * scaleX;
+                        double sy = (SVG_H - SVG_M) - (hull[i].y() - minY) * scaleY;
+                        
+                        svg << sx << "," << sy << " ";
+                }
+                svg << "\" fill=\"rgba(0,0,255,0.1)\" stroke=\"blue\" stroke-width=\"2\"/>\n";
+        }
+
+        /* Draw every point */
+        for (unsigned i = 0; i < points.size(); i++) {
+                double sx = SVG_M + (points[i].x() - minX) * scaleX;
+                double sy = (SVG_H - SVG_M) - (points[i].y() - minY) * scaleY;
+
+                svg << "<circle cx=\"" << sx << "\" cy=\"" << sy 
+                << "\" r=\"3\" fill=\"black\" />\n";
+        }
+
+        svg << "</svg>";
+        svg.close();
 }
 
 /******** printPoints ********
