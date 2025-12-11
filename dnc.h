@@ -17,7 +17,9 @@
 
 using namespace std;
 
+typedef vector<my_point> Points;
+
 /* Function Declarations */
-vector<my_point> dnc(vector<my_point>& pts);
+Points dnc(Points &pts);
 
 #endif

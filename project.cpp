@@ -4,16 +4,15 @@
  *      11 December, 2025
  *      Divide & Conquer Convex Hull Algorithm
  *
- *      The main driver for dnc_ch. Uses Professor Souvaine's LEDA library
- *      (en47_vis_txt.h) for geometry and visualization.
- *      TODO: Further description
+ *      The main driver for dnc_ch. Reads in a list of points and runs the 
+ *      divide and conquer convex hull algorithm on them. Uses Professor
+ *      Souvaine's LEDA library (en47_vis_txt.h) for geometry and visualization.
  */
 
 /* Standard c++ Includes */
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <limits>
 #include "assert.h"
 
 /* Professor Souvaine's LEDA library */
@@ -23,14 +22,16 @@
 
 using namespace std;
 
+typedef vector<my_point> Points;
+
 /* Function declarations */
-void readInput(string inputFile, vector<my_point> &pts);
-void printPoints(vector<my_point> &pts);
-void display(const vector<my_point> &pts, const vector<my_point> &hull);
+void readInput(string inputFile, Points &pts);
+void printPoints(Points &pts);
+void display(const Points &pts, const Points &hull);
 
 int main(int argc, char *argv[])
 {
-        vector<my_point> pts;
+        Points pts;
         
         if (argc == 2) {
                 readInput(argv[1], pts);
@@ -39,22 +40,20 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
         }
 
-        cout << "Points (before sort):\n";
+        cout << "Points:\n";
         printPoints(pts);
-        cout << pts.size() << " points read from file.\n";
-
-        /* Run algorithm and display */
+        cout << pts.size() << " total points.\n";
+        
+        /* Run algorithm and display convex hull */
         display(pts, {});
-        vector<my_point> hull = dnc(pts);
-
-        cout << "Points (after sort):\n";
-        printPoints(pts);
-        cout << "Hull size: " << hull.size() << "\n";
-
+        Points hull = dnc(pts);
+        cout << hull.size() << " points in hull.\n";
+        
         /* Final Display */
-        en47_clear();
+        en47_close();
         display(pts, hull);
         
+        /* Close on mouse click */
         en47_mouse_wait();
         en47_close();
 
@@ -63,11 +62,11 @@ int main(int argc, char *argv[])
 
 /******** readInput ********
  *
- * Populates a vector of my_points using data from a given file.
+ * Populates a vector of Points using data from a given file.
  *
  * Parameters:
- *      string inputFile:       Filename of a file containing my_points.
- *      vector<my_point> &pts:  Address to a vector of my_points.
+ *      string inputFile:       Filename of a file containing Points.
+ *      Points &pts:  Address to a vector of Points.
  * Returns:
  *      None.
  * Expects:
@@ -75,7 +74,7 @@ int main(int argc, char *argv[])
  * Notes:
  *      Throws an error if inputFile fails to open.
  ************************/
-void readInput(string inputFile, vector<my_point> &pts)
+void readInput(string inputFile, Points &pts)
 {
         /* Open input file and verify it opened correctly */
         ifstream infile(inputFile);
@@ -104,9 +103,8 @@ void readInput(string inputFile, vector<my_point> &pts)
  * Uses en47 functions to draw the window, points, and hull.
  *
  * Parameters:
- *      vector<my_point> &pts:  Address to a vector of my_points.
- *      vector<my_point> &hull: Address to a vector of my_points representing
- *                              the hull.
+ *      Points &pts:  Address to a vector of Points.
+ *      Points &hull: Address to a vector of Points representing the hull.
  * Returns:
  *      None.
  * Expects:
@@ -114,11 +112,9 @@ void readInput(string inputFile, vector<my_point> &pts)
  * Notes:
  *      None.
  ************************/
-void display(const vector<my_point> &pts, const vector<my_point> &hull)
+void display(const Points &pts, const Points &hull)
 {
-        if (pts.empty()) {
-                return;
-        }
+        if (pts.empty()) return;
 
         /* Calculate window size */
         int minX = pts[0].x, maxX = pts[0].x;
@@ -127,18 +123,10 @@ void display(const vector<my_point> &pts, const vector<my_point> &hull)
         my_point p;
         for (size_t i = 0; i < pts.size(); i++) {
                 p = pts[i];
-                if (p.x < minX) {
-                        minX = p.x;
-                }
-                if (p.x > maxX) {
-                        maxX = p.x;
-                }
-                if (p.y < minY) {
-                        minY = p.y;
-                }
-                if (p.y > maxY) {
-                        maxY = p.y;
-                }
+                if (p.x < minX) minX = p.x;
+                if (p.x > maxX) maxX = p.x;
+                if (p.y < minY) minY = p.y;
+                if (p.y > maxY) maxY = p.y;
         }
         
         /* Display */
@@ -153,10 +141,9 @@ void display(const vector<my_point> &pts, const vector<my_point> &hull)
         /* Draw hull lines */
         if (!hull.empty()) {
                 for (size_t i = 0; i < hull.size(); i++) {
-                        // Wrap around to connect the last point to the first
-                        const my_point& p1 = hull[i];
-                        const my_point& p2 = hull[(i + 1) % hull.size()];
-                        
+                        /* Wrap around to connect the last point to the first */
+                        const my_point &p1 = hull[i];
+                        const my_point &p2 = hull[(i + 1) % hull.size()];
                         en47_draw_segment(p1.x, p1.y, p2.x, p2.y, BLUE);
                 }
         }
@@ -164,10 +151,10 @@ void display(const vector<my_point> &pts, const vector<my_point> &hull)
 
 /******** printPoints ********
  *
- * Prints every my_point in a vector of my_points.
+ * Prints every my_point in a vector of Points.
  *
  * Parameters:
- *      vector<my_point> &pts:  Address to a vector of my_points.
+ *      Points &pts:  Address to a vector of Points.
  * Returns:
  *      None.
  * Expects:
@@ -176,7 +163,7 @@ void display(const vector<my_point> &pts, const vector<my_point> &hull)
  *      Throws a CRE if pts is empty.
  *      This is for testing purposes only.
  ************************/
-void printPoints(vector<my_point> &pts)
+void printPoints(Points &pts)
 {
         if (pts.empty()) {
                 cerr << "No points given.\n";
