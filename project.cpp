@@ -119,7 +119,6 @@ void display(const Points &pts, const Points &hull)
         /* Calculate window size */
         int minX = pts[0].x, maxX = pts[0].x;
         int minY = pts[0].y, maxY = pts[0].y;
-        int mar = 10;
         my_point p;
         for (size_t i = 0; i < pts.size(); i++) {
                 p = pts[i];
@@ -128,7 +127,13 @@ void display(const Points &pts, const Points &hull)
                 if (p.y < minY) minY = p.y;
                 if (p.y > maxY) maxY = p.y;
         }
-        
+        int mar; 
+        if ((maxX - minX) > (maxY - minY)) {
+                mar = 0.05 * (maxX - minX);
+        } else {
+                mar = 0.05 * (maxY - minY);
+        }
+
         /* Display */
         en47_display(minX - mar, maxX + mar, minY - mar, maxY + mar);
         

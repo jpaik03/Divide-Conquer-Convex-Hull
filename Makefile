@@ -33,4 +33,4 @@ dnc.o: dnc.cpp dnc.h en47_vis_txt.h
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c dnc.cpp
 
 clean: 
-	rm -f dnc_ch project.o
+	rm -f dnc_ch dnc.o project.o
