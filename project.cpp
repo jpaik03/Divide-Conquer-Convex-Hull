@@ -40,14 +40,17 @@ int main(int argc, char *argv[])
                 exit(EXIT_FAILURE);
         }
 
-        cout << "Points:\n";
-        printPoints(pts);
+        /* Uncomment this block for testing */
+        /* cout << "Points:\n"; */
+        /* printPoints(pts); */
+
         cout << pts.size() << " total points.\n";
         
         /* Run algorithm and display convex hull */
         display(pts, {});
         Points hull = dnc(pts);
-        cout << hull.size() << " points in hull.\n";
+        cout << hull.size() << " points in hull (CCW order):\n";
+        printPoints(hull);
         
         /* Final Display */
         en47_close();
@@ -65,8 +68,8 @@ int main(int argc, char *argv[])
  * Populates a vector of Points using data from a given file.
  *
  * Parameters:
- *      string inputFile:       Filename of a file containing Points.
- *      Points &pts:  Address to a vector of Points.
+ *      string inputFile:       Filename of a file containing a set of points.
+ *      Points &pts:            A vector of my_points to populate.
  * Returns:
  *      None.
  * Expects:
@@ -103,8 +106,8 @@ void readInput(string inputFile, Points &pts)
  * Uses en47 functions to draw the window, points, and hull.
  *
  * Parameters:
- *      Points &pts:  Address to a vector of Points.
- *      Points &hull: Address to a vector of Points representing the hull.
+ *      Points &pts:    The set of points to display.
+ *      Points &hull:   The hull to display.
  * Returns:
  *      None.
  * Expects:
@@ -159,7 +162,7 @@ void display(const Points &pts, const Points &hull)
  * Prints every my_point in a vector of Points.
  *
  * Parameters:
- *      Points &pts:  Address to a vector of Points.
+ *      const Points &pts:      The set of points to print.
  * Returns:
  *      None.
  * Expects:
@@ -168,7 +171,7 @@ void display(const Points &pts, const Points &hull)
  *      Throws a CRE if pts is empty.
  *      This is for testing purposes only.
  ************************/
-void printPoints(Points &pts)
+void printPoints(const Points &pts)
 {
         if (pts.empty()) {
                 cerr << "No points given.\n";

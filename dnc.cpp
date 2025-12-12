@@ -1,11 +1,11 @@
 /*
- * dnc.cpp
- * Justin Paik (jpaik03)
- * 11 December, 2025
- * Divide & Conquer Convex Hull Algorithm
+ *      dnc.cpp
+ *      Justin Paik (jpaik03)
+ *      11 December, 2025
+ *      Divide & Conquer Convex Hull Algorithm
  *
- * Contains function definitions for the divide and conquer convex hull
- * algorithm.
+ *      Contains function definitions for the divide and conquer convex hull
+ *      algorithm.
  */
 
 /* Standard c++ Includes */
