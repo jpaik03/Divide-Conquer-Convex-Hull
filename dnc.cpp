@@ -200,7 +200,7 @@ static ptPair getUpperBridge(const Points &left, const Points &right)
                         drawBridgeLine(left[i], right[j], SEARCH);
                 }
                 
-                /* Check if we need to move counterclockwise on right hull */
+                /* Check if we need to move clockwise on right hull */
                 while (crossProduct(left[i], right[j], 
                                     right[(j + 1) % rSize]) < 0) {
                         drawBridgeLine(left[i], right[j], ERASED);
@@ -257,7 +257,7 @@ static ptPair getLowerBridge(const Points &left, const Points &right)
                         drawBridgeLine(left[i], right[j], SEARCH);
                 }
                 
-                /* Check if we need to move clockwise on right hull */
+                /* Check if we need to move counterclockwise on right hull */
                 while (crossProduct(left[i], right[j], 
                                     right[(j - 1 + rSize) % rSize]) > 0) {
                         drawBridgeLine(left[i], right[j], ERASED);
