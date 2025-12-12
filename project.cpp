@@ -26,7 +26,7 @@ typedef vector<my_point> Points;
 
 /* Function declarations */
 void readInput(string inputFile, Points &pts);
-void printPoints(Points &pts);
+void printPoints(const Points &pts);
 void display(const Points &pts, const Points &hull);
 
 int main(int argc, char *argv[])
@@ -99,6 +99,8 @@ void readInput(string inputFile, Points &pts)
         }
 
         infile.close();
+
+        assert(!pts.empty());
 }
 
 /******** display ********
@@ -175,7 +177,7 @@ void printPoints(const Points &pts)
 {
         if (pts.empty()) {
                 cerr << "No points given.\n";
-                assert(!pts.empty());
+                exit(EXIT_FAILURE);
         }
 
         my_point p;

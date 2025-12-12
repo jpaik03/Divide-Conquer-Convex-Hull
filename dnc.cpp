@@ -66,7 +66,7 @@ Points dnc(Points &pts)
 {
         if (pts.empty()) {
                 cerr << "No points given.\n";
-                assert(!pts.empty());
+                exit(EXIT_FAILURE);
         }
         sortPoints(pts);
         vector<Points> emptyHulls;
@@ -175,6 +175,9 @@ static Points solveRecursive(Points &pts, const Points &allPts,
  ************************/
 static ptPair getUpperBridge(const Points &left, const Points &right)
 {
+        assert(!left.empty());
+        assert(!right.empty());
+
         int lSize = left.size();
         int rSize = right.size();
         
@@ -229,6 +232,9 @@ static ptPair getUpperBridge(const Points &left, const Points &right)
  ************************/
 static ptPair getLowerBridge(const Points &left, const Points &right)
 {
+        assert(!left.empty());
+        assert(!right.empty());
+
         int lSize = left.size();
         int rSize = right.size();
         
@@ -286,6 +292,11 @@ static ptPair getLowerBridge(const Points &left, const Points &right)
 static Points merge(const Points &lHull, const Points &rHull,
                     ptPair upper, ptPair lower)
 {
+        assert(upper.first < (int) lHull.size() &&
+               lower.first < (int) lHull.size());
+        assert(upper.second < (int) rHull.size() &&
+               lower.second < (int) rHull.size());
+               
         Points merged;
 
         /* Start at upper bridge on right hull */
