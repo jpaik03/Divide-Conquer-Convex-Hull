@@ -129,7 +129,7 @@ static Points solveRecursive(Points &pts, const Points &allPts,
         Points lPts(pts.begin(), pts.begin() + mid);
         Points rPts(pts.begin() + mid, pts.end());
         
-        /* Recurse to find convex hull of subsets */
+        /* Recurse to find convex hull of subsets (conquer) */
         Points lHull = solveRecursive(lPts, allPts, prevHulls);
         
         /* Build hull list including left sub-hull for right recursion */
@@ -145,7 +145,7 @@ static Points solveRecursive(Points &pts, const Points &allPts,
         /* Display sub-hulls for incremental visualization */
         drawSubHulls(lHull, rHull, allPts, newHulls);
 
-        /* Merge (conquer) */
+        /* Merge */
         ptPair upper = getUpperBridge(lHull, rHull);
         ptPair lower = getLowerBridge(lHull, rHull);
         Points merged = merge(lHull, rHull, upper, lower);
